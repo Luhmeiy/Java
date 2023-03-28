@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -29,14 +31,26 @@ public class App {
         // System.out.println(listaDeFilmes.size());
         // System.out.println(listaDeFilmes.get(0));
 
+        // Exibir e manipular os dados
+        var geradora = new GeradoraDeFigurinhas();
+
         for (Map<String, String> filme : listaDeFilmes) {
-            System.out.println("Título: " + ANSI_BOLD + filme.get("title") + ANSI_RESET);
-            System.out.println("Poster: " + ANSI_BOLD + filme.get("image") + ANSI_RESET);
+            String urlImagem = filme.get("image");
+            String titulo = filme.get("title");
+            String classificacao = filme.get("imDbRating");
+
+            InputStream inputStream = new URL(urlImagem).openStream();
+            String nomeArquivo = titulo + ".png";
+
+            geradora.cria(inputStream, nomeArquivo);
+
+            System.out.println("Título: " + ANSI_BOLD + titulo + ANSI_RESET);
+            System.out.println("Poster: " + ANSI_BOLD + urlImagem + ANSI_RESET);
             System.out.println(ANSI_CYAN_BACKGROUND
-                    + "Classificação: " + filme.get("imDbRating")
+                    + "Classificação: " + classificacao
                     + ANSI_RESET);
 
-            for (int i = 0; i < Math.round(Double.parseDouble(filme.get("imDbRating"))); i++) {
+            for (int i = 0; i < Math.round(Double.parseDouble(classificacao)); i++) {
                 System.out.print("\u2B50");
             }
 
