@@ -2,6 +2,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
@@ -30,16 +34,32 @@ public class GeradoraDeFigurinhas {
         graphics.drawImage(imagemOriginal, 0, 0, null);
 
         // Configurar a fonte
-        var fonte = new Font(Font.SANS_SERIF, Font.BOLD, 64);
-        graphics.setStroke(new BasicStroke(5.0f));
-        graphics.setPaint(Color.BLACK);
+        var fonte = new Font("Impact", Font.BOLD, 64);
         graphics.setColor(Color.YELLOW);
         graphics.setFont(fonte);
 
         // Escrever uma frase na nova imagem
         String mensagem = "TOPZERA";
         int textWidth = graphics.getFontMetrics().stringWidth(mensagem);
-        graphics.drawString(mensagem, (largura / 2) - (textWidth / 2), novaAltura - 64);
+        int posicaoX = (largura - textWidth) / 2;
+        int posicaoY = novaAltura - 64;
+        graphics.drawString(mensagem, posicaoX, posicaoY);
+
+        // Adicionar outline ao texto
+        FontRenderContext fontRenderContext = graphics.getFontRenderContext();
+        var textLayout = new TextLayout(mensagem, fonte, fontRenderContext);
+
+        Shape outline = textLayout.getOutline(null);
+        AffineTransform transform = graphics.getTransform();
+        transform.translate(posicaoX, posicaoY);
+        graphics.setTransform(transform);
+
+        var outlineStroke = new BasicStroke(largura * 0.004f);
+        graphics.setStroke(outlineStroke);
+
+        graphics.setColor(Color.BLACK);
+        graphics.draw(outline);
+        graphics.setClip(outline);
 
         // Escrever a nova imagem em um arquivo
         String nomeDiretorio = "saida/";
