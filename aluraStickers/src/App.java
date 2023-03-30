@@ -9,12 +9,10 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         // Fazer uma conexão HTTP e buscar os resultados
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-        ExtratorDeConteudo extrator = new ExtratorDeConteudoDoIMDB();
+        API api = API.IMDB_TOP_TV;
 
-        // String url =
-        // "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&start_date=2022-03-26&end_date=2022-03-28";
-        // ExtratorDeConteudo extrator = new ExtratorDeConteudoDaNasa();
+        String url = api.getUrl();
+        ExtratorDeConteudo extrator = api.getExtrator();
 
         var http = new ClienteHttp();
         String json = http.buscaDados(url);
