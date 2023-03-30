@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,18 +7,25 @@ public class ExtratorDeConteudoDaNasa implements ExtratorDeConteudo {
         var parser = new JsonParser();
         List<Map<String, String>> listaDeAtributos = parser.parse(json);
 
-        List<Conteudo> conteudos = new ArrayList<>();
-
         // Popular a lista de conteúdos
-        for (Map<String, String> atributos : listaDeAtributos) {
-            String titulo = atributos.get("title");
-            String urlImagem = atributos.get("url");
+        // STREAM VERSION
+        return listaDeAtributos.stream().map(atributos -> new Conteudo(atributos.get("title"), atributos.get("url")))
+                .toList();
 
-            var conteudo = new Conteudo(titulo, urlImagem);
-
-            conteudos.add(conteudo);
-        }
-
-        return conteudos;
+        // COMMON VERSION
+        /*
+         * List<Conteudo> conteudos = new ArrayList<>();
+         * 
+         * for (Map<String, String> atributos : listaDeAtributos) {
+         * String titulo = atributos.get("title");
+         * String urlImagem = atributos.get("url");
+         * 
+         * var conteudo = new Conteudo(titulo, urlImagem);
+         * 
+         * conteudos.add(conteudo);
+         * }
+         * 
+         * return conteudos;
+         */
     }
 }
