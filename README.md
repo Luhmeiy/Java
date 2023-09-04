@@ -7,6 +7,7 @@ Collection of small Java projects developed during courses or using tutorials.
 Developed by me:
 
 -   simple-calculator
+-   GUI-calculator
 
 Developed during [Imersão Java](https://www.youtube.com/watch?v=xt887SyYe7A) (The full immersion is not available anymore) by [Alura](https://www.youtube.com/@Alura):
 
