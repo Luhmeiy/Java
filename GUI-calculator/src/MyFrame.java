@@ -3,12 +3,19 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 public class MyFrame extends JFrame implements ActionListener {
     JPanel containerPanel, numberPanel, CommandPanel;
@@ -35,6 +42,11 @@ public class MyFrame extends JFrame implements ActionListener {
         button = new JButton("=");
         button.addActionListener(this);
 
+        InputMap inputMap = button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = button.getActionMap();
+
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_ENTER, "Button0");
+
         containerPanel = new JPanel();
         containerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -60,6 +72,22 @@ public class MyFrame extends JFrame implements ActionListener {
             updateResult();
             updateLabel(Integer.toString(result));
         }
+    }
+
+    private void addKeyBinding(InputMap inputMap, ActionMap actionMap, int keyCode, String actionName) {
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, 0);
+        inputMap.put(keyStroke, actionName);
+
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ("Button0".equals(actionName)) {
+                    button.doClick();
+                }
+            }
+        };
+
+        actionMap.put(actionName, action);
     }
 
     public void updateLabel(String text) {

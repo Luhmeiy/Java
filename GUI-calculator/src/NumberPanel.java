@@ -1,15 +1,25 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 public class NumberPanel extends JPanel implements ActionListener {
     private MyFrame frame;
 
-    JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9;
+    Map<String, JButton> buttonMap = new HashMap<>();
+    JButton[] buttons;
     JLabel emptyLabel;
 
     NumberPanel(MyFrame frame) {
@@ -17,46 +27,58 @@ public class NumberPanel extends JPanel implements ActionListener {
 
         this.frame = frame;
 
-        b0 = new JButton("0");
-        b1 = new JButton("1");
-        b2 = new JButton("2");
-        b3 = new JButton("3");
-        b4 = new JButton("4");
-        b5 = new JButton("5");
-        b6 = new JButton("6");
-        b7 = new JButton("7");
-        b8 = new JButton("8");
-        b9 = new JButton("9");
+        buttons = new JButton[10];
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new JButton(String.valueOf(i));
+            buttons[i].addActionListener(this);
+            buttonMap.put("Button" + i, buttons[i]);
+        }
+
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = this.getActionMap();
+
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_0, "Button0");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_1, "Button1");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_2, "Button2");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_3, "Button3");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_4, "Button4");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_5, "Button5");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_6, "Button6");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_7, "Button7");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_8, "Button8");
+        addKeyBinding(inputMap, actionMap, KeyEvent.VK_9, "Button9");
 
         emptyLabel = new JLabel();
 
-        b0.addActionListener(this);
-        b1.addActionListener(this);
-        b2.addActionListener(this);
-        b3.addActionListener(this);
-        b4.addActionListener(this);
-        b5.addActionListener(this);
-        b6.addActionListener(this);
-        b7.addActionListener(this);
-        b8.addActionListener(this);
-        b9.addActionListener(this);
+        for (int i = 9; i >= 1; i--) {
+            this.add(buttons[i]);
+        }
 
-        this.add(b9);
-        this.add(b8);
-        this.add(b7);
-        this.add(b6);
-        this.add(b5);
-        this.add(b4);
-        this.add(b3);
-        this.add(b2);
-        this.add(b1);
         this.add(emptyLabel);
-        this.add(b0);
+        this.add(buttons[0]);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton) e.getSource();
         frame.updateNumber(button.getText());
+    }
+
+    private void addKeyBinding(InputMap inputMap, ActionMap actionMap, int keyCode, String actionName) {
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, 0);
+        inputMap.put(keyStroke, actionName);
+
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton button = buttonMap.get(actionName);
+
+                if (button != null) {
+                    button.doClick();
+                }
+            }
+        };
+
+        actionMap.put(actionName, action);
     }
 }
