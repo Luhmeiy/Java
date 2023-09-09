@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 public class MyFrame extends JFrame implements ActionListener {
-    JPanel containerPanel, numberPanel, CommandPanel;
+    JPanel containerPanel, numberPanel, commandPanel;
     JLabel label;
     JButton button;
 
@@ -31,7 +31,7 @@ public class MyFrame extends JFrame implements ActionListener {
 
     MyFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new GridLayout(3, 0));
+        this.setLayout(new GridLayout(3, 1, 0, 5));
         this.setResizable(false);
 
         label = new JLabel("");
@@ -48,13 +48,13 @@ public class MyFrame extends JFrame implements ActionListener {
         addKeyBinding(inputMap, actionMap, KeyEvent.VK_ENTER, "Button0");
 
         containerPanel = new JPanel();
-        containerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        containerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         numberPanel = new NumberPanel(this);
-        CommandPanel = new CommandPanel(this);
+        commandPanel = new CommandPanel(this);
 
         containerPanel.add(numberPanel);
-        containerPanel.add(CommandPanel);
+        containerPanel.add(commandPanel);
 
         this.add(label);
         this.add(containerPanel);

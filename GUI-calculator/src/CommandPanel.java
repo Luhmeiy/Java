@@ -1,3 +1,4 @@
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -7,7 +8,6 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
-import javax.swing.BoxLayout;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -22,7 +22,7 @@ public class CommandPanel extends JPanel implements ActionListener {
     String[] buttonText = { "+", "-", "x", "\u00F7" };
 
     CommandPanel(MyFrame frame) {
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new GridLayout(4, 0, 1, 1));
 
         this.frame = frame;
 

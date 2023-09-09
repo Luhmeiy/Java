@@ -23,7 +23,7 @@ public class NumberPanel extends JPanel implements ActionListener {
     JLabel emptyLabel;
 
     NumberPanel(MyFrame frame) {
-        this.setLayout(new GridLayout(0, 3));
+        this.setLayout(new GridLayout(0, 3, 1, 1));
 
         this.frame = frame;
 
