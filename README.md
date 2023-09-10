@@ -18,3 +18,7 @@ Developed during [Java Full Course for free ☕](https://www.youtube.com/watch?v
 
 -   basics
 -   GUI
+
+Developed during [Java snake game 🐍](https://www.youtube.com/watch?v=bI6e6qjJ8JQ) by [Bro Code](https://www.youtube.com/@BroCodez):
+
+-   snake-game
