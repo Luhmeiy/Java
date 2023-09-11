@@ -5,11 +5,11 @@ public class GameFrame extends JFrame {
         this.setTitle("Snake");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
 
         this.add(new GamePanel());
 
         this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 }
