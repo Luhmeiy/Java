@@ -20,8 +20,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
     static final int DELAY = 75;
 
-    final int x[] = new int[GAME_UNITS];
-    final int y[] = new int[GAME_UNITS];
+    int x[] = new int[GAME_UNITS];
+    int y[] = new int[GAME_UNITS];
 
     int bodyParts = 6;
 
@@ -178,6 +178,30 @@ public class GamePanel extends JPanel implements ActionListener {
         FontMetrics gOMetrics = getFontMetrics(g.getFont());
 
         g.drawString("Game Over", (SCREEN_WIDTH - gOMetrics.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+
+        // Retry text
+        g.setColor(Color.red);
+        g.setFont(new Font("Ink Free", Font.BOLD, 25));
+
+        FontMetrics retryMetrics = getFontMetrics(g.getFont());
+
+        g.drawString("Press 'R' to retry", (SCREEN_WIDTH - retryMetrics.stringWidth("Press 'R' to retry")) / 2,
+                (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 2));
+    }
+
+    public void restartGame() {
+        x = new int[GAME_UNITS];
+        y = new int[GAME_UNITS];
+
+        bodyParts = 6;
+
+        applesEaten = 0;
+        appleX = 0;
+        appleY = 0;
+
+        direction = 'R';
+
+        startGame();
     }
 
     @Override
@@ -213,6 +237,11 @@ public class GamePanel extends JPanel implements ActionListener {
                 case KeyEvent.VK_DOWN:
                     if (direction != 'U') {
                         direction = 'D';
+                    }
+                    break;
+                case KeyEvent.VK_R:
+                    if (!running) {
+                        restartGame();
                     }
                     break;
             }
