@@ -30,6 +30,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleY;
 
     char direction = 'R';
+    boolean gameStarted = false;
     boolean running = false;
 
     Timer timer;
@@ -42,13 +43,29 @@ public class GamePanel extends JPanel implements ActionListener {
         this.addKeyListener(new MyKeyAdapter());
 
         random = new Random();
+    }
 
-        startGame();
+    public void startTitleScreen(Graphics g) {
+        // Title text
+        g.setColor(Color.green);
+        g.setFont(new Font("Ink Free", Font.BOLD, 50));
+
+        FontMetrics titleMetrics = getFontMetrics(g.getFont());
+
+        g.drawString("SNAKE GAME", (SCREEN_WIDTH - titleMetrics.stringWidth("SNAKE GAME")) / 2,
+                (SCREEN_HEIGHT / 2));
+
+        // Start text
+        g.setFont(new Font("Ink Free", Font.BOLD, 25));
+        FontMetrics startMetrics = getFontMetrics(g.getFont());
+        g.drawString("Press 'Space' to start", (SCREEN_WIDTH - startMetrics.stringWidth("Press 'Space' to start")) / 2,
+                (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 2));
     }
 
     public void startGame() {
         newApple();
 
+        gameStarted = true;
         running = true;
 
         timer = new Timer(DELAY, this);
@@ -61,35 +78,39 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g) {
-        if (running) {
-            for (int i = 0; i < (SCREEN_HEIGHT / UNIT_SIZE); i++) {
-                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-            }
-
-            g.setColor(Color.red);
-            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
-
-            for (int i = 0; i < bodyParts; i++) {
-                if (i == 0) {
-                    g.setColor(Color.green);
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-                } else {
-                    g.setColor(new Color(45, 180, 0));
-                    g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+        if (gameStarted) {
+            if (running) {
+                for (int i = 0; i < (SCREEN_HEIGHT / UNIT_SIZE); i++) {
+                    g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+                    g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
                 }
+
+                g.setColor(Color.red);
+                g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+
+                for (int i = 0; i < bodyParts; i++) {
+                    if (i == 0) {
+                        g.setColor(Color.green);
+                        g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    } else {
+                        g.setColor(new Color(45, 180, 0));
+                        g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+                        g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    }
+                }
+
+                g.setColor(Color.red);
+                g.setFont(new Font("Ink Free", Font.BOLD, 40));
+
+                FontMetrics metrics = getFontMetrics(g.getFont());
+
+                g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2,
+                        g.getFont().getSize());
+            } else {
+                gameOver(g);
             }
-
-            g.setColor(Color.red);
-            g.setFont(new Font("Ink Free", Font.BOLD, 40));
-
-            FontMetrics metrics = getFontMetrics(g.getFont());
-
-            g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2,
-                    g.getFont().getSize());
         } else {
-            gameOver(g);
+            startTitleScreen(g);
         }
     }
 
@@ -242,6 +263,11 @@ public class GamePanel extends JPanel implements ActionListener {
                 case KeyEvent.VK_R:
                     if (!running) {
                         restartGame();
+                    }
+                    break;
+                case KeyEvent.VK_SPACE:
+                    if (!gameStarted) {
+                        startGame();
                     }
                     break;
             }
