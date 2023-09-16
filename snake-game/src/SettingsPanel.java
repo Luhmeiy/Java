@@ -1,8 +1,13 @@
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,6 +21,10 @@ public class SettingsPanel extends JPanel implements ActionListener {
     JPanel buttonPanel;
     JButton greenButton, blueButton, redButton, rainbowButton;
 
+    Timer timer;
+    TimerTask task;
+    Random random;
+
     SettingsPanel(GameFrame frame) {
         this.setLayout(new GridLayout(0, 1, 0, 10));
         this.setBackground(new Color(0, 0, 0));
@@ -23,9 +32,10 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
         this.frame = frame;
 
+        random = new Random();
+
         // Labels
-        titleLabel = new JLabel("Settings");
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel = new JLabel("Settings", JLabel.CENTER);
         titleLabel.setFont(new Font("Ink Free", Font.BOLD, 75));
         titleLabel.setForeground(Color.green);
 
@@ -33,8 +43,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
         colorLabel.setFont(new Font("Ink Free", Font.BOLD, 35));
         colorLabel.setForeground(Color.white);
 
-        exitLabel = new JLabel("Press 'Esc' to go back");
-        exitLabel.setHorizontalAlignment(JLabel.CENTER);
+        exitLabel = new JLabel("Press 'Esc' to go back", JLabel.CENTER);
         exitLabel.setFont(new Font("Ink Free", Font.BOLD, 25));
         exitLabel.setForeground(Color.lightGray);
 
@@ -43,20 +52,10 @@ public class SettingsPanel extends JPanel implements ActionListener {
         buttonPanel.setBackground(new Color(0, 0, 0));
 
         // Buttons
-        greenButton = new JButton("Green");
-        blueButton = new JButton("Blue");
-        redButton = new JButton("Red");
-        rainbowButton = new JButton("Rainbow");
-
-        greenButton.addActionListener(this);
-        blueButton.addActionListener(this);
-        redButton.addActionListener(this);
-        rainbowButton.addActionListener(this);
-
-        greenButton.setFocusable(false);
-        blueButton.setFocusable(false);
-        redButton.setFocusable(false);
-        rainbowButton.setFocusable(false);
+        greenButton = createButton(Color.green);
+        blueButton = createButton(Color.blue);
+        redButton = createButton(Color.red);
+        rainbowButton = createButton(Color.green);
 
         buttonPanel.add(greenButton);
         buttonPanel.add(blueButton);
@@ -67,6 +66,17 @@ public class SettingsPanel extends JPanel implements ActionListener {
         this.add(colorLabel);
         this.add(buttonPanel);
         this.add(exitLabel);
+
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                rainbowButton.getComponent(0)
+                        .setBackground(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 150);
     }
 
     @Override
@@ -80,5 +90,26 @@ public class SettingsPanel extends JPanel implements ActionListener {
         } else if (e.getSource() == rainbowButton) {
             frame.updateSelectedColor(3);
         }
+    }
+
+    public JButton createButton(Color color) {
+        JButton button = new JButton();
+        button.addActionListener(this);
+        button.setFocusable(false);
+        button.setLayout(new FlowLayout());
+
+        JLabel icon = createColoredSquareLabel(color);
+        button.add(icon);
+
+        return button;
+    }
+
+    public JLabel createColoredSquareLabel(Color color) {
+        JLabel label = new JLabel();
+        label.setPreferredSize(new Dimension(50, 50));
+        label.setBackground(color);
+        label.setOpaque(true);
+
+        return label;
     }
 }
