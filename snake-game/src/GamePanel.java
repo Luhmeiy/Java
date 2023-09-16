@@ -5,14 +5,14 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener {
+    private GameFrame frame;
+
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
@@ -33,14 +33,20 @@ public class GamePanel extends JPanel implements ActionListener {
     boolean gameStarted = false;
     boolean running = false;
 
+    static final Color[] headColor = { Color.green, Color.blue, Color.red, Color.green };
+    static final Color[] bodyColor = { new Color(45, 180, 0), new Color(44, 1, 255), new Color(244, 2, 64) };
+
     Timer timer;
     Random random;
 
-    GamePanel() {
+    GamePanel(GameFrame frame) {
+        this.requestFocusInWindow();
+
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
-        this.addKeyListener(new MyKeyAdapter());
+
+        this.frame = frame;
 
         random = new Random();
     }
@@ -60,6 +66,11 @@ public class GamePanel extends JPanel implements ActionListener {
         FontMetrics startMetrics = getFontMetrics(g.getFont());
         g.drawString("Press 'Space' to start", (SCREEN_WIDTH - startMetrics.stringWidth("Press 'Space' to start")) / 2,
                 (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 2));
+
+        // Settings text
+        g.setColor(Color.red);
+        g.drawString("Press 's' for settings", (SCREEN_WIDTH - startMetrics.stringWidth("Press 's' for settings")) / 2,
+                (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 10));
     }
 
     public void startGame() {
@@ -90,11 +101,16 @@ public class GamePanel extends JPanel implements ActionListener {
 
                 for (int i = 0; i < bodyParts; i++) {
                     if (i == 0) {
-                        g.setColor(Color.green);
+                        g.setColor(headColor[frame.selectedColor]);
                         g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                     } else {
-                        g.setColor(new Color(45, 180, 0));
-                        g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+                        if (frame.selectedColor == 3) {
+                            g.setColor(new Color(random.nextInt(255), random.nextInt(255),
+                                    random.nextInt(255)));
+                        } else {
+                            g.setColor(bodyColor[frame.selectedColor]);
+                        }
+
                         g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                     }
                 }
@@ -158,28 +174,23 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         // Checks if head touches left border
-        if (x[0] < 0) {
+        if (x[0] < 0)
             running = false;
-        }
 
         // Checks if head touches right border
-        if (x[0] > SCREEN_WIDTH) {
+        if (x[0] > SCREEN_WIDTH)
             running = false;
-        }
 
         // Checks if head touches top border
-        if (y[0] < 0) {
+        if (y[0] < 0)
             running = false;
-        }
 
         // Checks if head touches bottom border
-        if (y[0] > SCREEN_HEIGHT) {
+        if (y[0] > SCREEN_HEIGHT)
             running = false;
-        }
 
-        if (!running) {
+        if (!running)
             timer.stop();
-        }
     }
 
     public void gameOver(Graphics g) {
@@ -234,43 +245,5 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         repaint();
-    }
-
-    public class MyKeyAdapter extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
-                    if (direction != 'R') {
-                        direction = 'L';
-                    }
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    if (direction != 'L') {
-                        direction = 'R';
-                    }
-                    break;
-                case KeyEvent.VK_UP:
-                    if (direction != 'D') {
-                        direction = 'U';
-                    }
-                    break;
-                case KeyEvent.VK_DOWN:
-                    if (direction != 'U') {
-                        direction = 'D';
-                    }
-                    break;
-                case KeyEvent.VK_R:
-                    if (!running) {
-                        restartGame();
-                    }
-                    break;
-                case KeyEvent.VK_SPACE:
-                    if (!gameStarted) {
-                        startGame();
-                    }
-                    break;
-            }
-        }
     }
 }
