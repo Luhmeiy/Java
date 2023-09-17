@@ -21,12 +21,16 @@ public class SettingsPanel extends JPanel implements ActionListener {
     JPanel buttonPanel;
     JButton greenButton, blueButton, redButton, rainbowButton;
 
+    static final int SCREEN_WIDTH = 600;
+    static final int SCREEN_HEIGHT = 600;
+
     Timer timer;
     TimerTask task;
     Random random;
 
     SettingsPanel(GameFrame frame) {
         this.setLayout(new GridLayout(0, 1, 0, 10));
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(new Color(0, 0, 0));
         this.setBorder(new EmptyBorder(0, 50, 0, 50));
 
@@ -36,11 +40,11 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
         // Labels
         titleLabel = new JLabel("Settings", JLabel.CENTER);
-        titleLabel.setFont(new Font("Ink Free", Font.BOLD, 75));
+        titleLabel.setFont(new Font("Ink Free", Font.BOLD, 50));
         titleLabel.setForeground(Color.green);
 
         colorLabel = new JLabel("Select the snake color: ");
-        colorLabel.setFont(new Font("Ink Free", Font.BOLD, 35));
+        colorLabel.setFont(new Font("Ink Free", Font.BOLD, 25));
         colorLabel.setForeground(Color.white);
 
         exitLabel = new JLabel("Press 'Esc' to go back", JLabel.CENTER);
