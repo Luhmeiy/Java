@@ -26,6 +26,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int bodyParts = 6;
 
     int applesEaten;
+    int highScore = 0;
     int appleX;
     int appleY;
 
@@ -116,7 +117,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
 
                 g.setColor(Color.red);
-                g.setFont(new Font("Ink Free", Font.BOLD, 40));
+                g.setFont(new Font("Ink Free", Font.BOLD, 35));
 
                 FontMetrics metrics = getFontMetrics(g.getFont());
 
@@ -194,9 +195,16 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g) {
+        boolean newHighScore = false;
+
+        if (applesEaten > highScore) {
+            highScore = applesEaten;
+            newHighScore = true;
+        }
+
         // Score text
         g.setColor(Color.red);
-        g.setFont(new Font("Ink Free", Font.BOLD, 40));
+        g.setFont(new Font("Ink Free", Font.BOLD, 35));
 
         FontMetrics scoreMetrics = getFontMetrics(g.getFont());
 
@@ -219,6 +227,22 @@ public class GamePanel extends JPanel implements ActionListener {
 
         g.drawString("Press 'R' to retry", (SCREEN_WIDTH - retryMetrics.stringWidth("Press 'R' to retry")) / 2,
                 (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 2));
+
+        // HighScore text
+        g.drawString("HighScore: " + highScore,
+                (SCREEN_WIDTH - retryMetrics.stringWidth("HighScore: " + highScore)) / 2,
+                (SCREEN_HEIGHT) - (g.getFont().getSize()));
+
+        if (newHighScore) {
+            g.setColor(Color.green);
+            g.setFont(new Font("Ink Free", Font.BOLD, 20));
+
+            FontMetrics highScoreMetrics = getFontMetrics(g.getFont());
+
+            g.drawString("New HighScore!",
+                    (SCREEN_WIDTH - highScoreMetrics.stringWidth("New HighScore!")) / 2,
+                    (SCREEN_HEIGHT) - (g.getFont().getSize() * 3));
+        }
     }
 
     public void restartGame() {
