@@ -228,6 +228,11 @@ public class GamePanel extends JPanel implements ActionListener {
         g.drawString("Press 'R' to retry", (SCREEN_WIDTH - retryMetrics.stringWidth("Press 'R' to retry")) / 2,
                 (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 2));
 
+        // Menu text
+        g.drawString("Press 'Esc' to go back to menu",
+                (SCREEN_WIDTH - retryMetrics.stringWidth("Press 'Esc' to go back to menu")) / 2,
+                (SCREEN_HEIGHT / 2) + (g.getFont().getSize() * 4));
+
         // HighScore text
         g.drawString("HighScore: " + highScore,
                 (SCREEN_WIDTH - retryMetrics.stringWidth("HighScore: " + highScore)) / 2,
@@ -245,7 +250,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    public void restartGame() {
+    public void resetVariables() {
         x = new int[GAME_UNITS];
         y = new int[GAME_UNITS];
 
@@ -256,7 +261,10 @@ public class GamePanel extends JPanel implements ActionListener {
         appleY = 0;
 
         direction = 'R';
+    }
 
+    public void restartGame() {
+        resetVariables();
         startGame();
     }
 

@@ -54,8 +54,13 @@ public class GameFrame extends JFrame implements KeyListener {
                     cardLayout.next(cardPanel);
                 break;
             case KeyEvent.VK_ESCAPE:
-                if (!gamePanel.gameStarted)
+                if (!gamePanel.gameStarted) {
                     cardLayout.previous(cardPanel);
+                } else if (!gamePanel.running) {
+                    gamePanel.resetVariables();
+                    gamePanel.gameStarted = false;
+                    gamePanel.repaint();
+                }
                 break;
             case KeyEvent.VK_SPACE:
                 if (!gamePanel.gameStarted)
