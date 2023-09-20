@@ -67,7 +67,7 @@ public class GameFrame extends JFrame implements KeyListener {
                     gamePanel.startGame();
                 break;
             case KeyEvent.VK_R:
-                if (!gamePanel.running)
+                if (gamePanel.gameStarted && !gamePanel.running)
                     gamePanel.restartGame();
                 break;
             case KeyEvent.VK_LEFT:
