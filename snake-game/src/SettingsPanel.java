@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,13 +12,17 @@ import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class SettingsPanel extends JPanel implements ActionListener {
+public class SettingsPanel extends JPanel implements ActionListener, ChangeListener {
     private GameFrame frame;
 
-    JLabel titleLabel, colorLabel, exitLabel;
+    JLabel titleLabel, colorLabel, speedLabel, exitLabel;
     JPanel buttonPanel;
+    JSlider speedSlider;
     JButton greenButton, blueButton, redButton, rainbowButton;
 
     static final int SCREEN_WIDTH = 600;
@@ -47,13 +51,30 @@ public class SettingsPanel extends JPanel implements ActionListener {
         colorLabel.setFont(new Font("Ink Free", Font.BOLD, 25));
         colorLabel.setForeground(Color.white);
 
+        speedLabel = new JLabel("Snake speed: " + frame.delay);
+        speedLabel.setFont(new Font("Ink Free", Font.BOLD, 25));
+        speedLabel.setForeground(Color.white);
+
         exitLabel = new JLabel("Press 'Esc' to go back", JLabel.CENTER);
         exitLabel.setFont(new Font("Ink Free", Font.BOLD, 25));
         exitLabel.setForeground(Color.lightGray);
 
         // Panel
-        buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        buttonPanel = new JPanel(new GridLayout(0, 4, 10, 10));
         buttonPanel.setBackground(new Color(0, 0, 0));
+
+        // Slider
+        speedSlider = new JSlider(0, 125, frame.delay);
+        speedSlider.setFocusable(false);
+        speedSlider.setBackground(Color.black);
+
+        speedSlider.setPaintTicks(true);
+        speedSlider.setMinorTickSpacing(5);
+
+        speedSlider.setPaintTrack(true);
+        speedSlider.setMajorTickSpacing(25);
+
+        speedSlider.addChangeListener(this);
 
         // Buttons
         greenButton = createButton(Color.green);
@@ -69,6 +90,8 @@ public class SettingsPanel extends JPanel implements ActionListener {
         this.add(titleLabel);
         this.add(colorLabel);
         this.add(buttonPanel);
+        this.add(speedLabel);
+        this.add(speedSlider);
         this.add(exitLabel);
 
         timer = new Timer();
@@ -96,11 +119,17 @@ public class SettingsPanel extends JPanel implements ActionListener {
         }
     }
 
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        frame.updateDelay(speedSlider.getValue());
+        speedLabel.setText("Snake speed: " + frame.delay);
+    }
+
     public JButton createButton(Color color) {
         JButton button = new JButton();
         button.addActionListener(this);
         button.setFocusable(false);
-        button.setLayout(new FlowLayout());
+        button.setLayout(new GridBagLayout());
 
         JLabel icon = createColoredSquareLabel(color);
         button.add(icon);

@@ -13,6 +13,7 @@ public class GameFrame extends JFrame implements KeyListener {
     private SettingsPanel settingsPanel;
 
     int selectedColor = 0;
+    int delay = 75;
 
     GameFrame() {
         this.setTitle("Snake");
@@ -42,6 +43,10 @@ public class GameFrame extends JFrame implements KeyListener {
 
     public void updateSelectedColor(int newSelectedColor) {
         selectedColor = newSelectedColor;
+    }
+
+    public void updateDelay(int newDelay) {
+        delay = newDelay;
     }
 
     @Override
